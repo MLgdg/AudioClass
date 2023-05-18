@@ -1,0 +1,16 @@
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xaa 0 &
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xab 0 & 
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xac 0 &
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xad 0 &
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xae 1 &
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xaf 1 &
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xag 1 &
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xah 1 &
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xai 2 &
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xaj 2 &
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xak 2 &
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xal 2 &
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xam 3 &
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xan 3 &
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xao 3 &
+nohup /root/paddlejob/workspace/gaoqingdong/env/miniconda3/bin/python get_audio_feature.py xap 3 &
