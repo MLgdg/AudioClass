@@ -23,18 +23,18 @@ class AverageMeter(object):
         self.count += n
         self.avg = self.sum / self.count
 
-def save_checkpoint(state, epoch, is_best, cfg):
+def save_checkpoint(state, epoch, is_best):
     """utils"""
-    filename = '_'.join([cfg.model.filename, str(epoch)])
-    if not os.path.exists(cfg.model.save_model_path):
-        os.makedirs(cfg.model.save_model_path)
-    filename = "{output}/{filename}".format(output=cfg.model.save_model_path, filename=filename)
-    torch.save(state, filename)
+    # filename = '_'.join([cfg.model.filename, str(epoch)])
+    # if not os.path.exists(cfg.model.save_model_path):
+    #     os.makedirs(cfg.model.save_model_path)
+    #filename = "{output}/{filename}".format(output=cfg.model.save_model_path, filename=filename)
+    #torch.save(state, filename)
     if is_best:
         print("save best model, acc:", state['best_prec1'])
         best_name = '_'.join(['best_checkpoint.pth.tar', str(epoch)])
-        best_name = "{output}/{filename}".format(output=cfg.model.save_model_path, filename=best_name)
-        shutil.copyfile(filename, best_name)
+        #best_name = "{output}/{filename}".format(output=cfg.model.save_model_path, filename=best_name)
+        #shutil.copyfile(filename, best_name)
 
 def accuracy(output, target, topk=(1,)):
     """Computes the precision@k for the specified values of k"""

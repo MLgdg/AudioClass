@@ -29,7 +29,7 @@ model = torch.nn.DataParallel(audiomodel.AudioModel(audio_pre, audio_trunks, aud
 optim, scheduler = opt(model.parameters())
 loss_fn = torch.nn.CrossEntropyLoss()
 
-
+best_prec1 = 1
 
 for e in range(10):
     losses = AverageMeter()
@@ -49,35 +49,77 @@ for e in range(10):
         optimizer.step()
         scheduler.step()
         if print_fn%20==0:
-            print()
-print(len(dataload))
-for nids, audio_datas in dataload:
-    if num%1000==0:
-        print(num)
-    num+=1
-    s2 = time.time()
-    for i in range(len(nids)):
-        audio_data = audio_datas[i].to(device)#data.load_and_transform_audio_data(audio_paths, device)
-        nid = nids[i]
+            print("train log epoch:{}\tbatch:{}\tloss:{:.5f}-{:.5f}acc:{:.4f}-{:.4f}".format(e, b, losses.val, losses.avg, top1.val, top1.avg))
+        if save_mode%200==0:
+            val_loss, val_acc = validate(testloader, model, loss_fn, e)
+
+            prec1 = val_acc.avg
+            is_best = prec1 > best_prec1
+                best_prec1 = max(prec1, best_prec1)
+
+            save_checkpoint({
+                        'epoch': epoch + 1,
+                        'state_dict': model.state_dict(),
+                        'best_prec1': best_prec1,
+                    }, epoch, is_best)
+def validate(val_loader, model, criterion1, epoch=0):
+    """train"""
+    losses = AverageMeter()
+    top1 = AverageMeter()
+    model.eval()
+
+    end = time.time()
+    for b, nids, audio_data, labels in enumerate(val_loader):
+
         with torch.no_grad():
+            out = model(audio_data.to(device))
+        loss = criterion1(out, labels.to(device))
+        acc = accuracy(out, labels)
+        losses.update(loss.data, len(nids))
+        top1.update(acc, len(nids))
+
+        # measure elapsed time
+        batch_time.update(time.time() - end)
         
-            B, S = audio_data.shape[:2]
-            audio_data = audio_data.reshape(
-                            B * S, *audio_data.shape[2:]
-                    )
+        if print_fn%20==0:
+            print("test log epoch:{}\tbatch:{}\tloss:{:.5f}-{:.5f}acc:{:.4f}-{:.4f}".format(e, b, losses.val, losses.avg, top1.val, top1.avg))
+
+
+    print(('Testing Results: Prec@1 {top1.avg:.3f} Loss {loss.avg:.5f}'
+           .format(top1=top1, loss=losses)))
+    return losses, top1
+    model.train()
+# if __name__ == '__main__':
+#     main()
+  
+# print(len(dataload))
+# for nids, audio_datas in dataload:
+#     if num%1000==0:
+#         print(num)
+#     num+=1
+#     s2 = time.time()
+#     for i in range(len(nids)):
+#         audio_data = audio_datas[i].to(device)#data.load_and_transform_audio_data(audio_paths, device)
+#         nid = nids[i]
+#         with torch.no_grad():
+        
+#             B, S = audio_data.shape[:2]
+#             audio_data = audio_data.reshape(
+#                             B * S, *audio_data.shape[2:]
+#                     )
             
-            s3 = time.time()
-            modality_value = audio_pre(**{'audio': audio_data})
-            trunk_inputs = modality_value["trunk"]
-            head_inputs = modality_value["head"]
-            modality_value = audio_trunks(**trunk_inputs)
-            s4 =time.time()
-            #np.save(os.path.join(save_path + nid + '_all_token'), modality_value.cpu().numpy())
-            s5 =time.time()
-            #print("data:",s3-s2, "model:",s4-s3,"save:", s5-s4)
-            #print(modality_value.shape)
-            modality_value = audio_head(modality_value, **head_inputs)
-            np.save(os.path.join(save_path + nid + '_head_token' + '.npy'), modality_value.cpu().numpy())
-            modality_value = audio_post(modality_value)
-            np.save(os.path.join(save_path + nid + '_head_post_token' + '.npy'), modality_value.cpu().numpy())
-            #os.system('mv ./audio/{}*')
+#             s3 = time.time()
+#             modality_value = audio_pre(**{'audio': audio_data})
+#             trunk_inputs = modality_value["trunk"]
+#             head_inputs = modality_value["head"]
+#             modality_value = audio_trunks(**trunk_inputs)
+#             s4 =time.time()
+#             #np.save(os.path.join(save_path + nid + '_all_token'), modality_value.cpu().numpy())
+#             s5 =time.time()
+#             #print("data:",s3-s2, "model:",s4-s3,"save:", s5-s4)
+#             #print(modality_value.shape)
+#             modality_value = audio_head(modality_value, **head_inputs)
+#             np.save(os.path.join(save_path + nid + '_head_token' + '.npy'), modality_value.cpu().numpy())
+#             modality_value = audio_post(modality_value)
+#             np.save(os.path.join(save_path + nid + '_head_post_token' + '.npy'), modality_value.cpu().numpy())
+#             #os.system('mv ./audio/{}*')
