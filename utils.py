@@ -33,6 +33,7 @@ def save_checkpoint(state, epoch, is_best):
     if is_best:
         print("save best model, acc:", state['best_prec1'])
         best_name = '_'.join(['best_checkpoint.pth.tar', str(epoch)])
+        torch.save(state, best_name)
         #best_name = "{output}/{filename}".format(output=cfg.model.save_model_path, filename=best_name)
         #shutil.copyfile(filename, best_name)
 

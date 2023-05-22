@@ -17,7 +17,7 @@ class FeedForward(nn.Module):
 
 class AudioModel(torch.nn.Module):
 	def __init__(self, pre, trans, head, post):
-		super(Audiomodel, self).__init__()
+		super(AudioModel, self).__init__()
 
 		self.pre = pre
 		self.trans = trans

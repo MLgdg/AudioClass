@@ -369,6 +369,7 @@ def collate_fn(bathcs):
     for nid, data, label in bathcs:
         nids.append(nid)
         datas.append(data)
+        labels.append(label)
     return nids, torch.cat(datas), torch.tensor(labels)
 
 class AudioData(torch.utils.data.Dataset):
